@@ -45,7 +45,7 @@ But hold out, it's not time yet! Or go ahead, we're not the deploy police. But y
 
 Anyway, let's take a look at the portion of the `sample.env` file that's pertinent to testing.
 
-The `FOUNDRY_PROFILE='tutorial'` line selects the `tutorial` profile from shipyard's `foundry.toml` file, which will allow you to run shipyard-core's tests from the shipyard directory.
+The `FOUNDRY_PROFILE='tutorial'` line selects the `tutorial` profile from Shipyard's `foundry.toml` file, which will allow you to run shipyard-core's tests from the Shipyard directory.
 
 `FOUNDRY_VERBOSITY=3` is like running your tests with the `-vvv` flag all the time. It's usually the exact sweet spot. When tests pass, they're not going to spam you with stack traces, but when they fail, you'll likely have all the info you need to debug.
 

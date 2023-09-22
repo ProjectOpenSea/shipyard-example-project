@@ -2,12 +2,13 @@
 
 [Shipyard](https://github.com/ProjectOpenSea/shipyard) is a Forge template for smart contract development.
 
-This repository is a basic example of how to use shipyard, along with [an accompanying tutorial](shipyardDocs/exampleNFTTutorial/Overview.md) for getting set up.
+This repository is a basic example of how one might use Shipyard, along with [an accompanying tutorial](exampleNFTTutorial/Overview.md) for getting set up.
 
+The idea is to clone this repo, play around with it a bit, take a pass through the tutorial, and discard it for a clean start with [Shipyard](https://github.com/ProjectOpenSea/shipyard). In other words, start with `git clone git@github.com:ProjectOpenSea/shipyard-example-project.git`, but once familiar with the patterns, be ready to `forge init --template projectopensea/shipyard` from scratch. More detail on that later.
 
 ## Installation
 
-Shipyard requires Foundry. You can find specific install instructions [here](https://book.getfoundry.sh/getting-started/installation#using-foundryup).
+Both Shipyard and this tutorial require Foundry. You can find specific install instructions [here](https://book.getfoundry.sh/getting-started/installation#using-foundryup).
 
 But most likely, you can install Foundry with the following commands:
 
@@ -27,26 +28,18 @@ brew install lcov
 ```
 
 ## Overview
-Shipyard comes with some batteries included
 
-- [OpenZeppelin](https://github.com/OpenZeppelin/openzeppelin-contracts), [Solady](https://github.com/Vectorized/solady), and Shipyard-core smart contracts as dependencies, ready with [`solc` remappings](https://docs.soliditylang.org/en/latest/path-resolution.html#import-remapping) so you can jump into writing your own contracts right away
-- `forge fmt` configured as the default formatter for VSCode projects
-- Github Actions workflows that run `forge fmt --check` and `forge test` on every push and PR
-  - A separate action to automatically fix formatting issues on PRs by commenting `!fix` on the PR
-- A pre-configured, but still minimal `foundry.toml` 
-  - high optimizer settings by default for gas-efficient smart contracts
-  - an explicit `solc` compiler version for reproducible builds
-  - no extra injected `solc` metadata for simpler Etherscan verification and [deterministic cross-chain deploys via CREATE2](https://0xfoobar.substack.com/p/vanity-addresses).
-  - a separate build profile for CI with increased fuzz runs for quicker local iteration, while still ensuring your contracts are well-tested
+### Shipyard proper
+Shipyard can be used as a starting point or a toolkit in a wide variety of circumstances. In general, if you're building something NFT related, you're likely to find something useful here. For more info on [Shipyard](https://github.com/ProjectOpenSea/shipyard), check out its repository.
 
-## Usage
+### Shipyard tutorial
+The tutorial covers the process of deploying an NFT contract, ranging from [ERC721 concepts](exampleNFTTutorial/ERC721Concepts.md), [setting up a dev environment](exampleNFTTutorial/EnvironmentSetup.md), [running tests](exampleNFTTutorial/Testing.md), [customizing the behavior of an NFT contract](exampleNFTTutorial/CustomNFTFunctionality.md), to [deploying](exampleNFTTutorial/Deploying.md).
 
-Shipyard can be used as a starting point or a toolkit in a wide variety of circumstances. In general, if you're building something NFT related, you're likely to find something useful here. For the sake of exploring some of what Shipyard has to offer in concrete terms, here's a guide on how to deploy an NFT contract.
-### Quick Deploy Guide
+The table of contents and a brief intro can be found [here](exampleNFTTutorial/Overview.md).
 
-To deploy an NFT contract to the Goerli testnet, fund an address with 0.25 Goerli ETH, swap in the appropriate values for `<your_key>` and `<your_pk>` in this command, open a terminal window, and run the following:
+## Quick Deploy Guide
 
-TODO: update this to do the template thing. And add a bit about staying up to date with the latest.
+To deploy an NFT contract to the Goerli testnet, fund an address with 0.25 Goerli ETH, swap in the appropriate value `<your_pk>` in this command, open a terminal window, and run the following:
 
 ```
 mkdir my-shipyard-based-project &&
@@ -119,7 +112,6 @@ Run
 ```
 
 ### Useful Aliases
-
 ```
 alias gm="foundryup"
 alias ff="forge fmt"

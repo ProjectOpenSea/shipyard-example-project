@@ -4,8 +4,6 @@ Feel free to skip this section if you've already read about ERC-721 or perused t
 
 There's nothing like going straight to the source: [https://eips.ethereum.org/EIPS/eip-721#specification](https://eips.ethereum.org/EIPS/eip-721#specification). The ERC-721 spec outlines the bare minimum interface and behavior that a contract needs to implement in order to be recognized and treated as an ERC-721 contract by the rest of the web 3 ecosystem (such as OpenSea, block explorers, etc.). There are only a half dozen operative "MUST"s in there, so we've got a lot of leeway. Eventually, we're going to deploy a snazzy, gas-optimized ERC721 with some bonus features. But for now, let's take a look at the stock version, [OpenZeppelin's example ERC721](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol)
 
-TODO (blocked): update with links within the repo throughout.
-
 OpenZeppelin's contracts show a straightforward, battle-tested, minimal implementation of the ERC-721 spec. For example, the ERC-721 spec states that `safeTransferFrom` "Throws if `_from` is not the current owner."  And we can see that the required functionality is implemented on [lines 148-150](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol#L148-L150) of OpenZeppelin's ERC721:
 
 ```
