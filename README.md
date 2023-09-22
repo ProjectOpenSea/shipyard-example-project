@@ -1,6 +1,8 @@
-# Shipyard
+# Example Shipyard Project
 
-Shipyard is a Forge template for smart contract development.
+[Shipyard](https://github.com/ProjectOpenSea/shipyard) is a Forge template for smart contract development.
+
+This repository is a basic example of how to use shipyard, along with [an accompanying tutorial](shipyardDocs/exampleNFTTutorial/Overview.md) for getting set up.
 
 
 ## Installation
@@ -39,6 +41,71 @@ Shipyard comes with some batteries included
 
 ## Usage
 
+Shipyard can be used as a starting point or a toolkit in a wide variety of circumstances. In general, if you're building something NFT related, you're likely to find something useful here. For the sake of exploring some of what Shipyard has to offer in concrete terms, here's a guide on how to deploy an NFT contract.
+### Quick Deploy Guide
+
+To deploy an NFT contract to the Goerli testnet, fund an address with 0.25 Goerli ETH, swap in the appropriate values for `<your_key>` and `<your_pk>` in this command, open a terminal window, and run the following:
+
+TODO: update this to do the template thing. And add a bit about staying up to date with the latest.
+
+```
+mkdir my-shipyard-based-project &&
+cd my-shipyard-based-project &&
+curl -L https://foundry.paradigm.xyz | bash &&
+foundryup &&
+forge init --template projectopensea/shipyard &&
+forge build &&
+export GOERLI_RPC_URL='https://goerli.blockpi.network/v1/rpc/public &&
+export MY_ACTUAL_PK_BE_CAREFUL='<your_pk>' &&
+forge create --rpc-url $GOERLI_RPC_URL \
+    --private-key $MY_ACTUAL_PK_BE_CAREFUL \
+    src/Dockmaster.sol:Dockmaster \
+    --constructor-args "Tutorial Dockmaster NFT" "TDNFT"
+```
+
+A quick breakdown of each step follows.
+
+Create a directory, `cd` into it, :
+```
+mkdir my-shipyard-based-project &&
+cd my-shipyard-based-project &&
+curl -L https://foundry.paradigm.xyz | bash
+```
+
+Install the `foundryup` up command and run it, which in turn installs forge, cast, anvil, and chisel:
+```
+curl -L https://foundry.paradigm.xyz | bash &&
+foundryup
+```
+
+Create a new Foundry project based on Shipyard, which also initializes a new git repository.
+```
+forge init --template projectopensea/shipyard
+```
+
+Install dependencies and compile the contracts:
+```
+forge build
+```
+
+Set up your environment variables:
+```
+export GOERLI_RPC_URL='https://goerli.blockpi.network/v1/rpc/public	 &&
+export MY_ACTUAL_PK_BE_CAREFUL='<your_pk>'
+```
+
+Run the `forge create` command, which deploys the contract:
+```
+forge create --rpc-url $GOERLI_RPC_URL \
+    --private-key $MY_ACTUAL_PK_BE_CAREFUL \
+    src/Dockmaster.sol:Dockmaster \
+    --constructor-args "Tutorial Dockmaster NFT" "TDNFT"
+```
+
+See https://book.getfoundry.sh/reference/forge/forge-create for more information on `forge create`.
+
+Running this command merely deploys the example Dockmaster NFT contract, but it's a good way to check for a properly functioning dev environment. Deploying to mainnet instead of Goerli just requires using a mainnet RPC URL instead of a Goerli RPC URL, and it costs real money.
+
 ### Reinitialize Submodules
 When working across branches with different dependencies, submodules may need to be reinitialized. Run
 ```bash
@@ -51,29 +118,10 @@ Run
 ./coverage-report
 ```
 
+### Useful Aliases
 
+```
+alias gm="foundryup"
+alias ff="forge fmt"
+```
 
-## Roadmap
-
-- [x] Configure test.yml to run `forge test` on every push to main and PR
-- [x] Add a `forge fmt --check` workflow to the Github Actions
-- [x] Add an optional `forge fmt` fix workflow to the Github Actions
-- [ ]  Include base dependencies
-  - [x] OZ
-    - [ ] Pin to version
-  - [x] Solady
-    - [ ] Pin to version
-  - [ ] Shipyard-core (dependent on making public)
-- [ ] Include a base cross-chain deploy script
-- [ ] Figure out if there's a way we can make `forge verify-contract` more ergonomic
-- [ ] Top-level helpers:
-  - [x] PRB's `reinit-submodules` script as top-level helper
-  - [x] `coverage-report` script as top-level helper
-  - [ ] TODO: are there security concerns about these?
-
-Copilot suggests:
-- [ ] Additional github actions
-  - [ ] Add a `forge deploy` workflow to the Github Actions
-  - [ ] Add a `forge verify` workflow to the Github Actions
-- [ ] Add a `forge verify` script to the top-level helpers
-- [ ] 
