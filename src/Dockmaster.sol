@@ -68,7 +68,8 @@ contract Dockmaster is AbstractNFT {
                     "description",
                     string.concat(
                         "This is an NFT on the Dockmaster NFT contract. Its slip number is ",
-                        tokenId.toString(), "."
+                        tokenId.toString(),
+                        "."
                     )
                 ),
                 json.property("image", Metadata.svgDataURI(_image(tokenId))),

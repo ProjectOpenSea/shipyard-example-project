@@ -11,6 +11,7 @@ contract DockmasterTest is Test {
     DockmasterInterface public dockmaster;
 
     event Hail(string message);
+
     error UnauthorizedMinter();
 
     function setUp() public {
