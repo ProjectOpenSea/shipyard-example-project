@@ -2,15 +2,16 @@
 auto_detect_solc = false
 solc = '0.8.20'
 src = "src"
+script = "script"
+test = "test"
 out = "out"
-libs = ["lib"]
 remappings = [
     'forge-std/=lib/forge-std/src',
-    'solady/=lib/solady/src/',
-    'solady-test/=lib/solady/test/',
     'openzeppelin-contracts/=lib/openzeppelin-contracts/contracts/',
+    'seaport-types/=lib/seaport-types/src/',
     'shipyard-core/=lib/shipyard-core/src/',
-    'seaport-types/=lib/seaport-types/src/'
+    'solady-test/=lib/solady/test/',
+    'solady/=lib/solady/src/'
 ]
 # use realistic numbers in tests
 block_number = 17722462
