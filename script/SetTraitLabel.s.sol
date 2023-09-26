@@ -9,7 +9,7 @@ import {
     FullTraitValue,
     TraitLabel,
     EditorsLib
-} from "shipyard-core/dynamic-traits/lib/TraitLabelLib.sol";
+} from "lib/shipyard-core/src/dynamic-traits/lib/TraitLabelLib.sol";
 
 interface SetTraitLabelInterface {
     function setTraitLabel(bytes32 traitKey, TraitLabel memory _traitLabel)

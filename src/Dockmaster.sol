@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import { json } from "shipyard-core/onchain/json.sol";
-import { svg } from "shipyard-core/onchain/svg.sol";
+import { json } from "lib/shipyard-core/src/onchain/json.sol";
+import { svg } from "lib/shipyard-core/src/onchain/svg.sol";
 import { LibString } from "solady/utils/LibString.sol";
 import { Base64 } from "solady/utils/Base64.sol";
 import { Solarray } from "solarray/Solarray.sol";
-import { Metadata, DisplayType } from "shipyard-core/onchain/Metadata.sol";
-import { AbstractNFT } from "shipyard-core/reference/AbstractNFT.sol";
+import { Metadata, DisplayType } from "lib/shipyard-core/src/onchain/Metadata.sol";
+import { AbstractNFT } from "lib/shipyard-core/src/reference/AbstractNFT.sol";
 
 contract Dockmaster is AbstractNFT {
     using LibString for string;
