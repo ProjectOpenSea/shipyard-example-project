@@ -13,8 +13,6 @@ import {
     TraitLabel
 } from "shipyard-core/dynamic-traits/lib/TraitLabelLib.sol";
 
-import "forge-std/console.sol";
-
 struct Attribute {
     string attrType;
     string value;
@@ -324,15 +322,11 @@ contract DockmasterTest is Test {
         string memory file
     ) internal {
         for (uint256 i; i < attributes.length; i++) {
-            console.log("CHECKING ATTRIBUTES");
-            console.log(i);
             (
                 string memory attrType,
                 string memory value,
                 string memory displayType
             ) = _getAttributeAtIndex(i, file);
-
-            console.log("CHECKING ATTRIBUTES");
 
             assertEq(
                 attrType,
