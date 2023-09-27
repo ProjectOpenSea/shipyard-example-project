@@ -6,7 +6,9 @@ import { svg } from "lib/shipyard-core/src/onchain/svg.sol";
 import { LibString } from "solady/utils/LibString.sol";
 import { Base64 } from "solady/utils/Base64.sol";
 import { Solarray } from "solarray/Solarray.sol";
-import { Metadata, DisplayType } from "lib/shipyard-core/src/onchain/Metadata.sol";
+import {
+    Metadata, DisplayType
+} from "lib/shipyard-core/src/onchain/Metadata.sol";
 import { AbstractNFT } from "lib/shipyard-core/src/reference/AbstractNFT.sol";
 
 contract Dockmaster is AbstractNFT {

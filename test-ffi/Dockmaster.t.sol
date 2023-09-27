@@ -22,8 +22,8 @@ struct Attribute {
 contract DockmasterTest is Test {
     Dockmaster dockmaster;
 
-    string TEMP_JSON_PATH = "./test-ffi/tmp/temp.json";
-    string TEMP_JSON_PATH_TWO = "./test-ffi/tmp/temp-2.json";
+    string TEMP_JSON_PATH_PREFIX = "./test-ffi/tmp/temp";
+    string TEMP_JSON_PATH_FILE_TYPE = ".json";
     string PROCESS_JSON_PATH = "./test-ffi/scripts/process_json.js";
 
     function setUp() public {
@@ -37,10 +37,15 @@ contract DockmasterTest is Test {
     function testStringURI(uint256 tokenId) public {
         tokenId = bound(tokenId, 1, 10);
 
-        _populateTempFileWithJson(tokenId, TEMP_JSON_PATH);
+        // Create a file name to use throughtout the test. It will have a form
+        // like ./test-ffi/tmp/temp-<gasleft>-<tokenId>.json. It will be
+        // deleted at the end of the test.
+        string memory fileName = _fileName(tokenId);
+
+        _populateTempFileWithJson(tokenId, fileName);
 
         (string memory name, string memory description, string memory image) =
-            _getNameDescriptionAndImage(TEMP_JSON_PATH);
+            _getNameDescriptionAndImage(fileName);
 
         assertEq(
             name,
@@ -77,7 +82,7 @@ contract DockmasterTest is Test {
             displayType: "noDisplayType"
         });
 
-        _checkAttributesAgainstExpectations(tokenId, attributes, TEMP_JSON_PATH);
+        _checkAttributesAgainstExpectations(tokenId, attributes, fileName);
     }
 
     function testDynamicMetadata(uint256 tokenId) public {
@@ -121,8 +126,13 @@ contract DockmasterTest is Test {
         // which is permitted by `AllowedEditor.Self`.
         dockmaster.setTrait(bytes32("dockmaster.shipIsIn"), tokenId, "True");
 
+        // Create a file name to use throughtout the test. It will have a form
+        // like ./test-ffi/tmp/temp-<gasleft>-<tokenId>.json. It will be
+        // deleted at the end of the test.
+        string memory fileNameTrueState = _fileName(tokenId);
+
         // Populate the temp file with the json.
-        _populateTempFileWithJson(tokenId, TEMP_JSON_PATH_TWO);
+        _populateTempFileWithJson(tokenId, fileNameTrueState);
 
         // Check for the new trait.
         Attribute[] memory attributes = new Attribute[](3);
@@ -143,16 +153,22 @@ contract DockmasterTest is Test {
             displayType: "string"
         });
 
+        // Check for the new trait in True state.
         _checkAttributesAgainstExpectations(
-            tokenId, attributes, TEMP_JSON_PATH_TWO
+            tokenId, attributes, fileNameTrueState
         );
 
-        // Call the function to add the new trait.
+        // Call the function to add the new trait in False state.
         vm.prank(dockmaster.ownerOf(tokenId));
         dockmaster.setTrait(bytes32("dockmaster.shipIsIn"), tokenId, "False");
 
+        // Create a file name to use throughtout the test. It will have a form
+        // like ./test-ffi/tmp/temp-<gasleft>-<tokenId>.json. It will be
+        // deleted at the end of the test.
+        string memory fileNameFalseState = _fileName(tokenId);
+
         // Populate the temp file with the json.
-        _populateTempFileWithJson(tokenId, TEMP_JSON_PATH_TWO);
+        _populateTempFileWithJson(tokenId, fileNameFalseState);
 
         // Check for the new trait.
         attributes[2] = Attribute({
@@ -162,14 +178,19 @@ contract DockmasterTest is Test {
         });
 
         _checkAttributesAgainstExpectations(
-            tokenId, attributes, TEMP_JSON_PATH_TWO
+            tokenId, attributes, fileNameFalseState
         );
 
         // Call the function to delete the trait.
         dockmaster.deleteTrait(bytes32("dockmaster.shipIsIn"), tokenId);
 
+        // Create a file name to use throughtout the test. It will have a form
+        // like ./test-ffi/tmp/temp-<gasleft>-<tokenId>.json. It will be
+        // deleted at the end of the test.
+        string memory fileNameDeletedState = _fileName(tokenId);
+
         // Populate the temp file with the json.
-        _populateTempFileWithJson(tokenId, TEMP_JSON_PATH_TWO);
+        _populateTempFileWithJson(tokenId, fileNameDeletedState);
 
         // This just checks that the two original traits are still there. It
         // might be worth writing an addition script to check the length of the
@@ -189,7 +210,7 @@ contract DockmasterTest is Test {
         });
 
         _checkAttributesAgainstExpectations(
-            tokenId, attributes, TEMP_JSON_PATH_TWO
+            tokenId, attributes, fileNameDeletedState
         );
     }
 
@@ -203,8 +224,7 @@ contract DockmasterTest is Test {
         // Decode the base64 encoded json.
         bytes memory decoded = Base64.decode(uri);
 
-        // Write the decoded json to a file. Make sure to use a different temp
-        // file for each test or else there will be collisions.
+        // Write the decoded json to a file.
         vm.writeFile(file, string(decoded));
     }
 
@@ -260,8 +280,10 @@ contract DockmasterTest is Test {
         // explicitness.
         commandLineInputs[3] = "--top-level";
 
-        (name, description, image) =
-            abi.decode(vm.ffi(commandLineInputs), (string, string, string));
+        if (vm.exists(file)) {
+            (name, description, image) =
+                abi.decode(vm.ffi(commandLineInputs), (string, string, string));
+        }
     }
 
     function _getAttributeAtIndex(uint256 attributeIndex, string memory file)
@@ -287,8 +309,12 @@ contract DockmasterTest is Test {
         commandLineInputs[3] = "--attribute";
         commandLineInputs[4] = vm.toString(attributeIndex);
 
-        (attrType, value, displayType) =
-            abi.decode(vm.ffi(commandLineInputs), (string, string, string));
+        if (vm.exists(file)) {
+            (attrType, value, displayType) =
+                abi.decode(vm.ffi(commandLineInputs), (string, string, string));
+        } else {
+            revert("File does not exist.");
+        }
     }
 
     function _generateExpectedTokenName(uint256 tokenId)
@@ -348,6 +374,11 @@ contract DockmasterTest is Test {
                 )
             );
         }
+
+        // Clear out the file once it's served its purpose. If one of the checks
+        // above fails, this will not be called and the file will be left behind
+        // in the tmp directory for reference.
+        _cleanUp(file);
     }
 
     function _generateError(
@@ -365,5 +396,26 @@ contract DockmasterTest is Test {
                 vm.toString(traitIndex)
             )
         );
+    }
+
+    function _fileName(uint256 tokenId) internal view returns (string memory) {
+        // Create a new file for each token ID and for each call possible token
+        // state. Using gasLeft() prevents collisions across tests imprefectly
+        // but tolerably. The token ID is for reference.
+        return string.concat(
+            TEMP_JSON_PATH_PREFIX,
+            "-",
+            vm.toString(gasleft()),
+            "-",
+            vm.toString(tokenId),
+            TEMP_JSON_PATH_FILE_TYPE
+        );
+    }
+
+    function _cleanUp(string memory file) internal {
+        if (vm.exists(file)) {
+            vm.removeFile(file);
+        }
+        assertFalse(vm.exists(file));
     }
 }
